@@ -159,11 +159,20 @@ nav a:hover{ text-decoration:underline; }
 
   <!-- 오른쪽: 버튼(링크) -->
   <div class="right">
-    <div class="top-actions">
-      <a href="${contextPath}/user/login" class="btn">login</a>
-      <a href="${contextPath}/user/signup" class="btn">Sign up</a>
-    </div>
-    
+  <c:choose>
+    <c:when test="${empty sessionScope.userId}">
+      <div class="top-actions">
+        <a href="${contextPath}/user/login" class="btn">login</a>
+        <a href="${contextPath}/user/signup" class="btn">Sign up</a>
+      </div>
+    </c:when>
+    <c:otherwise>
+      <span>${sessionScope.userName}님 환영합니다!</span>
+      <a href="${contextPath}/user/mypage">마이페이지</a>
+      <a href="${contextPath}/user/logout">로그아웃</a>
+    </c:otherwise>
+  </c:choose>
+  
     <div class="bottom-actions">
       <a href="${contextPath}/myproduct" class="btn dark">상품 관리</a>
     </div>
