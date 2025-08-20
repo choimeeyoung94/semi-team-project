@@ -29,7 +29,5 @@ public class UserDTO {
   private Timestamp updatedAt;
   private Integer point;
   private byte[] salt;
-  private String profileImageKey;
-
   
 }

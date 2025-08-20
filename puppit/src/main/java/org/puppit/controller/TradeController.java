@@ -16,16 +16,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TradeController {
   
-  private final TradePaymentService tradeService;
+  private final TradePaymentService trade;
   
   @GetMapping("/trade/history")
-  public String getTradeHistory(Integer userId, 
-                                String type, 
-                                Model model) {
-    List<TradeDTO> tradeDTOs = tradeService.selectTradeById(userId);
+  public String getTradeHistory(Integer userId, Model model) {
+    List<TradeDTO> tradeDTOs = trade.selectTradeById(userId);
     model.addAttribute("tradeDTOs", tradeDTOs);
-    
-    return (type.equals("buy") ? "trade/buyRecord" : type.equals("sell") ? "trade/sellRecord" : "/");
+  
+    return "trade/tradeRecord";
   }
   
  

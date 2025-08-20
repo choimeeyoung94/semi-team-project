@@ -1,6 +1,5 @@
 package org.puppit.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.puppit.model.dto.ChatUserDTO;
@@ -119,21 +118,6 @@ public class UserServiceImpl implements UserService {
   public boolean updateUser(Map<String, Object> map) {
     return userDAO.updateUser(map) == 1;
    
-  }
-
-  @Override
-  public String getProfileImageKey(Integer userId) {
-    return userDAO.selectProfileImageKey(userId);
-  }
-
-  @Override
-  public boolean updateProfileImageKey(Integer userId, String profileImageKey) {
-    Map<String, Object> map = new HashMap<>();
-    map.put("userId", userId);
-    map.put("profileImageKey", profileImageKey);
-    int rows = userDAO.updateProfileImageKey(map);   
-    System.out.println("[updateProfileImageKey] rows=" + rows + ", userId=" + userId + ", key=" + profileImageKey);
-    return rows == 1;
   }
 
 }

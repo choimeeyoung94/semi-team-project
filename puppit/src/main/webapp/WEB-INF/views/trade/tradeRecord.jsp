@@ -145,11 +145,18 @@ body {
           <tbody>
             <c:forEach var="tradeDTO" items="${tradeDTOs}">
               <tr>
-                <td><fmt:formatDate value="${tradeDTO.createdAt}" pattern="yyyy-MM-dd HH:mm" /></td>
+                <!-- 거래 일시 -->
+                <td>
+                  <fmt:formatDate value="${tradeDTO.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+                </td>
+                <!-- 상품명 -->
                 <td class="mono">${tradeDTO.productName}</td>
+                <!-- 상품가격 -->
                 <td>${tradeDTO.productPrice} P</td>
+                <!-- 구매자 / 판매자 -->
                 <td>${tradeDTO.buyerNickname}</td>
                 <td>${tradeDTO.sellerNickname}</td>
+                <!-- 상태 (데이터 값으로 색상 적용 가능) -->
                 <td>
                   <span class="badge-status" data-status="${tradeDTO.status}">
                     ${tradeDTO.status}

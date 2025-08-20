@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import org.puppit.model.dto.UserDTO;
 import org.puppit.model.dto.UserStatusDTO;
-import org.puppit.service.S3Service;
 import org.puppit.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,10 +30,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
   
   private final UserService userService;
-  private final S3Service s3Service;
-  private final AmazonS3 amazonS3;
-  private static final String BUCKET = "jscode-upload-images";
-  
   
   @SuppressWarnings("unchecked")
   @GetMapping("/mypage")
@@ -201,40 +191,5 @@ public class UserController {
     session.setAttribute("sessionMap", newSessionMap);
     
     return "redirect:/";
-  }
-  
-  @PostMapping("/profile/image")
-  public String changeProfileimage(@SessionAttribute("sessionMap") Map<String, Object> sessionMap,
-                                   @RequestParam("file") MultipartFile file,
-                                   RedirectAttributes rttr) {
-    
-    Integer userId = (Integer) sessionMap.get("userId");
-    if(userId == null) return "redirect:/login";
-    try {
-      // ex) "profile/123"
-      String folder = "profile/" + userId;
-      Map<String, String> uploaded = s3Service.uploadFile(file, folder);
-      String newKey = uploaded.get("fileName"); // ex) profile/123/uuid_filename.jpg
-      
-      // 기존 키 조회 후 삭제(옵션)
-      String oldKey = userService.getProfileImageKey(userId);
-      if (oldKey != null && !oldKey.isBlank()) {
-          try {
-              amazonS3.deleteObject(BUCKET, oldKey);
-              // 필요 시만 삭제
-              // amazonS3.deleteObject(bucket, oldKey);
-          } catch (Exception ignore) {}
-      }
-
-      // DB에 새 키 저장 (URL 말고 Key를 저장하세요)
-      userService.updateProfileImageKey(userId, newKey);
-
-      rttr.addFlashAttribute("msg", "프로필 이미지가 변경되었습니다.");
-      amazonS3.setObjectAcl("jscode-upload-images", newKey, CannedAccessControlList.PublicRead);
-    } catch (Exception e) {
-      rttr.addFlashAttribute("msg", "업로드 실패" + e.getMessage());
-    }
-    
-    return "redirect:/user/mypage";                                   
   }
 }

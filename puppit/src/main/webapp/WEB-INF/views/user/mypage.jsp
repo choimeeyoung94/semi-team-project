@@ -76,7 +76,6 @@ body {
   flex: 0 0 64px;
   border: 2px solid #eee;
   background: #fafafa;
-  cursor: pointer;
 }
 
 .avatar img {
@@ -247,33 +246,13 @@ body {
   <!-- 프로필 -->
   <div class="profile">
     <div class="avatar">
-      <c:choose>
-        <c:when test="${not empty user.profileImageKey}">
-          <img src="https://jscode-upload-images.s3.ap-northeast-2.amazonaws.com/${user.profileImageKey}"
-               alt="프로필 이미지"
-               onerror="this.src='${contextPath}/resources/image/profile-default.png'">
-        </c:when>
-        <c:otherwise>
-          <img src="${contextPath}/resources/image/profile-default.png" alt="프로필 이미지">
-        </c:otherwise>
-      </c:choose>
-      
+      <img src="${contextPath}/resources/image/${sessionScope.sessionMap.userId}.png" alt="프로필 이미지" />
     </div>
     <div class="who">
       <div class="nick">${user.nickName != null ? user.nickName : 'happy'}</div>
     </div>
     <button class="action-btn" type="button" onclick="location.href='${contextPath}/user/profile'">프로필 수정</button>
   </div>
-  
-    <!-- 프로필 이미지 업로드 폼 (숨김) -->
-  <form id="avatarForm"
-        action="${contextPath}/user/profile/image"
-        method="post"
-        enctype="multipart/form-data"
-        style="display:none">
-    <input id="avatarFile" type="file" name="file" accept="image/*">
-  </form>
-  
   
     <!-- 찜 목록 카드 -->
   <div class="action-card" style="margin-top: 18px;">
@@ -309,79 +288,28 @@ body {
         
   </div>
 
-  <!-- 포인트 충전 내역 -->
-  <div class="action-card" style="margin-top: 18px;">
-    <div>
-      <div class="action-title">포인트 충전 내역</div>
-      <div class="action-desc">최근 충전 기록을 확인하세요</div>
+  <div class="future-area">
+    <div class="action-grid">
+      <!-- 포인트 충전 내역 -->
+      <div class="action-card">
+        <div>
+          <div class="action-title">포인트 충전 내역</div>
+          <div class="action-desc">최근 충전 기록을 확인하세요</div>
+        </div>
+        <button class="action-btn" type="button" onclick="location.href='${contextPath}/payment/history?userId=${user.userId}'">내역 보기</button>
+      </div>
+
+      <!-- 거래 내역 -->
+      <div class="action-card">
+        <div>
+          <div class="action-title">거래 내역</div>
+          <div class="action-desc">구매·판매 기록을 한눈에</div>
+        </div>
+        <button class="action-btn" type="button" onclick="location.href='${contextPath}/trade/history?userId=${user.userId}'">내역 보기</button>
+      </div>
     </div>
-    <button class="action-btn" type="button"
-            onclick="location.href='${contextPath}/payment/history?userId=${user.userId}'">
-      내역 보기
-    </button>
-  </div>
-  
-  <!-- 판매 내역 -->
-  <div class="action-card" style="margin-top: 18px;">
-    <div>
-      <div class="action-title">판매 내역</div>
-      <div class="action-desc">내가 판매한 기록을 확인하세요</div>
-    </div>
-    <button class="action-btn" type="button"
-            onclick="location.href='${contextPath}/trade/history?userId=${user.userId}&type=sell'">
-      내역 보기
-    </button>
-  </div>
-  
-  <!-- 구매 내역 -->
-  <div class="action-card" style="margin-top: 18px;">
-    <div>
-      <div class="action-title">구매 내역</div>
-      <div class="action-desc">내가 구매한 기록을 확인하세요</div>
-    </div>
-    <button class="action-btn" type="button"
-            onclick="location.href='${contextPath}/trade/history?userId=${user.userId}&type=buy'">
-      내역 보기
-    </button>
   </div>
 </div>
-
-<script>
-  (function () {
-    const avatarBox = document.querySelector(".profile .avatar");
-    const fileInput = document.getElementById("avatarFile");
-    const form = document.getElementById("avatarForm");
-
-    if (!avatarBox || !fileInput || !form) return;
-
-    // 1) 아바타 클릭 -> 파일 선택 창
-    avatarBox.addEventListener("click", function () {
-      fileInput.click();
-    });
-
-    // 2) 파일 선택 즉시 업로드
-    fileInput.addEventListener("change", function () {
-      const file = fileInput.files && fileInput.files[0];
-      if (!file) return;
-
-      // (선택) 간단 검증: 타입/크기
-      const okTypes = ["image/jpeg", "image/png", "image/webp"];
-      if (!okTypes.includes(file.type)) {
-        alert("JPG/PNG/WEBP만 업로드 가능합니다.");
-        fileInput.value = "";
-        return;
-      }
-      const MAX = 2 * 1024 * 1024; // 2MB 예시
-      if (file.size > MAX) {
-        alert("파일이 너무 큽니다. 최대 2MB까지 가능합니다.");
-        fileInput.value = "";
-        return;
-      }
-      
-      form.submit(); // 바로 업로드
-    });
-  })();
-</script>
 
 </body>
 </html>

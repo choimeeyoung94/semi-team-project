@@ -54,7 +54,7 @@
   
   <!-- account 사용해서 user_id(PK) 조회 -->
   <select id="getUserId" parameterType="String" resultType="UserDTO">
-    SELECT user_id, account_id, user_name, nick_name, user_password, user_email, user_phone, created_at, updated_at, point, profile_image_key 
+    SELECT user_id, account_id, user_name, nick_name, user_password, user_email, user_phone, created_at, updated_at, point
       FROM user
      WHERE account_id = #{accountId}
   </select>
@@ -82,17 +82,4 @@
         nick_name  = #{user.nickName}
     WHERE account_id = #{prevAccountId}
   </update>
-  
-  <select id="selectProfileImageKey" parameterType="int" resultType="string">
-    SELECT profile_image_key
-    FROM user
-    WHERE user_id = #{userId}
-  </select>
-
-  <update id="updateProfileImageKey">
-    UPDATE user
-    SET profile_image_key = #{profileImageKey}
-    WHERE user_id = #{userId}
-  </update>
-  
 </mapper>

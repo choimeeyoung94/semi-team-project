@@ -20,16 +20,4 @@ public class WebConfig {
             }
         };
     }
-	 @Bean
-   public org.springframework.web.multipart.commons.CommonsMultipartResolver multipartResolver() {
-       var resolver = new org.springframework.web.multipart.commons.CommonsMultipartResolver();
-       resolver.setDefaultEncoding("UTF-8");
-       // 파일 1개 최대 크기
-       resolver.setMaxUploadSizePerFile(5L * 1024 * 1024); // 5MB
-       // 요청 전체 최대 크기 (파일 여러 개 합)
-       resolver.setMaxUploadSize(10L * 1024 * 1024); // 10MB
-       // 메모리 임계값(바로 디스크에 쓸 최소 크기) - 기본값 사용 권장
-       // resolver.setMaxInMemorySize(0);
-       return resolver;
-   }
 }
