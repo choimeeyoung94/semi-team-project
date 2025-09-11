@@ -17,12 +17,12 @@
 
     <!-- 1) HikariConfig -->
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-        <property name="jdbcUrl"
-                  value="jdbc:mysql://puppit.cp2aos8cos6t.ap-southeast-2.rds.amazonaws.com:3306/puppit?serverTimezone=Asia/Seoul&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;sslMode=REQUIRED&amp;allowPublicKeyRetrieval=true"/>
-        <property name="username" value="user"/>
-        <property name="password" value="puppitgood"/>
-    </bean>
+    <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+    <property name="jdbcUrl"
+              value="jdbc:mysql://database-1.crkawqo6w121.eu-north-1.rds.amazonaws.com/db_puppit?serverTimezone=Europe/Stockholm&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;sslMode=REQUIRED&amp;allowPublicKeyRetrieval=true"/>
+    <property name="username" value="admin"/>
+    <property name="password" value="puppitgood"/>
+   </bean>
 
     <!-- 2) DataSource -->
     <bean id="hikariDataSource" class="com.zaxxer.hikari.HikariDataSource">
