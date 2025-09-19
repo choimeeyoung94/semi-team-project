@@ -714,6 +714,15 @@ Promise.all(chatCountPromises).then(() => {
                 badge.style.display = 'none';
                 badge.textContent = '';
             }
+            
+
+            // 뱃지에서 unreadCount 추출
+           // const badge = chatDiv.querySelector('.unread-badge');
+           // let unreadCount = 0;
+          //  if (badge && badge.textContent) {
+          //      unreadCount = parseInt(badge.textContent) || 0;
+          //  }
+            /*
             if (unreadCount > 0) {
                 fetch(contextPath + '/api/alarm/readAll', {
                     method: 'POST',
@@ -745,7 +754,7 @@ Promise.all(chatCountPromises).then(() => {
                 });
             }  else {
             	console.log('else');
-            }
+            } */
         });
     });
 
@@ -762,6 +771,7 @@ Promise.all(chatCountPromises).then(() => {
     if (sendBtn) {
         sendBtn.addEventListener('click', function(e){
             // e.preventDefault();
+            alert("sendMessage click");
             sendMessage(currentRoomId, chatMessages);
         });
     }
@@ -1618,6 +1628,7 @@ function setUserInRoom(roomId, role) {
 
 
 function sendMessage(currentRoomId, chatMessages = []) {
+	alert('sendMessage 함수 내부 들어옴');
     // chatMessages가 undefined/null이면 window.chatMessages(전역)를 사용
     if (!Array.isArray(chatMessages) || chatMessages.length === 0) {
         chatMessages = window.chatMessages || [];
@@ -1628,13 +1639,15 @@ function sendMessage(currentRoomId, chatMessages = []) {
         return;
     }
     const message = input.value;
-    if (!stompClient || !isConnected) return;
-    if (!message.trim() || !currentRoomId) return;
+    console.log("message: ", message);
+    //if (!stompClient || !isConnected) return;
+    //if (!message.trim() || !currentRoomId) return;
 
     // 1. productSellerId는 상품영역에서만 추출 (window.lastProductInfo를 반드시 사용)
     let productSellerId = window.lastProductInfo?.sellerId || null;
     let productSellerAccountId = window.lastProductInfo?.chatSellerAccountId || null;
     let productId = window.lastProductInfo?.productId || null;
+    console.log("productSellerId: ", productSellerId, " productSellerAccountId: ", " productId: ", productId);
 
     // 2. buyerId/buyerAccountId는 chatMessages에서만 추출
     let buyerId = null, buyerAccountId = null;
@@ -1738,6 +1751,16 @@ function sendMessage(currentRoomId, chatMessages = []) {
     }
 
 
+    function updateChatListLastMessage(roomId, lastMsg, lastMsgTime) {
+        // 채팅방 목록에서 해당 roomId의 최근 메시지/시간을 업데이트
+        const chatDiv = document.querySelector('.chatList[data-room-id="' + roomId + '"]');
+        if (chatDiv) {
+            const msgRow = chatDiv.querySelector('.chat-message-row');
+            const timeRow = chatDiv.querySelector('.chat-meta-row');
+            if (msgRow) msgRow.textContent = lastMsg;
+            if (timeRow) timeRow.textContent = lastMsgTime;
+        }
+    }
 
 
 
